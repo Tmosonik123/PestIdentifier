@@ -46,7 +46,7 @@ const Home = () => {
           <Tabs defaultValue="capture" className="w-full">
             <TabsList className="grid w-full grid-cols-3 mb-8">
               <TabsTrigger value="capture">Identify Pest/Disease</TabsTrigger>
-              <TabsTrigger value="track">Track Pest</TabsTrigger>
+              <TabsTrigger value="track">Track Pest & Diseases</TabsTrigger>
               <TabsTrigger value="history">History</TabsTrigger>
             </TabsList>
 
