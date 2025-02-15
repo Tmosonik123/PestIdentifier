@@ -55,7 +55,7 @@ const TrackingHistory = ({
 
   return (
     <div className="p-6 bg-white min-h-screen">
-      <h1 className="text-2xl font-bold mb-6">Pest Tracking History</h1>
+      <h1 className="text-2xl font-bold mb-6">Tracking History</h1>
 
       <div className="flex flex-col md:flex-row gap-4 mb-6">
         <div className="flex-1">
