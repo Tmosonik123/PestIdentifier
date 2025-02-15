@@ -27,5 +27,6 @@ dist-ssr
 
 **/tempobook/dynamic/
 **/tempobook/storyboards/
+.env
 
 core
