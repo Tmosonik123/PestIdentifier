@@ -89,7 +89,7 @@ const Home = () => {
                     >
                       <path d="m15 18-6-6 6-6" />
                     </svg>
-                    Back to Camera
+                    Back
                   </button>
                   {currentPhoto && (
                     <div className="max-w-md mx-auto">
