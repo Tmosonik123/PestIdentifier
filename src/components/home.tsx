@@ -15,6 +15,7 @@ const Home = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [identificationResult, setIdentificationResult] =
     useState<IdentificationInfo | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [showTrackingForm, setShowTrackingForm] = useState(false);
 
   const handlePhotoCapture = async (photoData: string) => {
@@ -24,7 +25,13 @@ const Home = () => {
       setIsAnalyzing(true);
 
       const result = await identifyFromImage(photoData);
-      setIdentificationResult(result);
+      if ("error" in result && result.error === "no_disease_found") {
+        setError("No pest or disease identified in the image");
+        setIdentificationResult(null);
+      } else {
+        setError(null);
+        setIdentificationResult(result as IdentificationInfo);
+      }
     } catch (error) {
       console.error("Error analyzing image:", error);
       // You might want to show an error message to the user here
@@ -60,6 +67,30 @@ const Home = () => {
 
               {showResults && (
                 <div className="space-y-8">
+                  <button
+                    onClick={() => {
+                      setShowResults(false);
+                      setCurrentPhoto(null);
+                      setIdentificationResult(null);
+                      setError(null);
+                    }}
+                    className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 mb-4"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="m15 18-6-6 6-6" />
+                    </svg>
+                    Back to Camera
+                  </button>
                   {currentPhoto && (
                     <div className="max-w-md mx-auto">
                       <img
@@ -75,7 +106,17 @@ const Home = () => {
                       <span className="ml-2">Analyzing image...</span>
                     </div>
                   ) : (
-                    <PestIdentificationResults result={identificationResult} />
+                    <>
+                      {error ? (
+                        <div className="p-4 text-center text-red-600 bg-red-50 rounded-lg">
+                          {error}
+                        </div>
+                      ) : (
+                        <PestIdentificationResults
+                          result={identificationResult}
+                        />
+                      )}
+                    </>
                   )}
                 </div>
               )}

@@ -32,9 +32,12 @@ export async function identifyFromImage(
     });
 
     // Create the prompt
-    const prompt = `You are an expert entomologist and plant pathologist. Analyze this garden image and identify any pests or diseases present.
+    const prompt = `You are an expert entomologist and plant pathologist. First, analyze this garden image and determine if there are any visible pests or plant diseases present.
 
-You must respond with ONLY a valid JSON object and nothing else - no markdown, no extra text. Format:
+If NO pests or diseases are visible, respond with exactly:
+{"error": "no_disease_found"}
+
+If a pest or disease IS visible, respond with a valid JSON object in this format:
 {
 "type": "pest",
 "name": "Common name",
@@ -44,7 +47,9 @@ You must respond with ONLY a valid JSON object and nothing else - no markdown, n
 "controlMethods": ["method 1", "method 2"],
 "affectedPlants": ["plant 1", "plant 2"],
 "symptoms": ["symptom 1", "symptom 2"]
-}`;
+}
+
+Respond ONLY with the JSON - no additional text or markdown.`;
 
     // Generate content
     const result = await model.generateContent([
