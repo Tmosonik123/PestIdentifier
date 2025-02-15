@@ -10,20 +10,23 @@ import {
 } from "./ui/accordion";
 import { Bug, Info, AlertTriangle, Sprout } from "lucide-react";
 
-interface PestInfo {
+export interface IdentificationInfo {
+  type: "pest" | "disease";
   name: string;
   confidence: number;
   description: string;
   threatLevel: "low" | "medium" | "high";
   controlMethods: string[];
   affectedPlants: string[];
+  symptoms?: string[];
 }
 
-interface PestIdentificationResultsProps {
-  pestInfo?: PestInfo;
+interface IdentificationResultsProps {
+  result?: IdentificationInfo;
 }
 
-const defaultPestInfo: PestInfo = {
+const defaultResult: IdentificationInfo = {
+  type: "pest",
   name: "Japanese Beetle",
   confidence: 92,
   description:
@@ -36,11 +39,13 @@ const defaultPestInfo: PestInfo = {
     "Apply milky spore to lawn",
   ],
   affectedPlants: ["Roses", "Grape vines", "Japanese maple", "Fruit trees"],
+  symptoms: ["Skeletonized leaves", "Damaged flower buds", "Holes in foliage"],
 };
 
-const PestIdentificationResults: React.FC<PestIdentificationResultsProps> = ({
-  pestInfo = defaultPestInfo,
+const IdentificationResults: React.FC<IdentificationResultsProps> = ({
+  result,
 }) => {
+  if (!result) return null;
   const getThreatLevelColor = (level: string) => {
     switch (level) {
       case "low":
@@ -60,14 +65,14 @@ const PestIdentificationResults: React.FC<PestIdentificationResultsProps> = ({
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-2xl font-bold flex items-center gap-2">
             <Bug className="h-6 w-6" />
-            Pest Identification Results
+            {result.type === "pest" ? "Pest" : "Disease"} Identification Results
           </CardTitle>
           <Badge
             variant="secondary"
-            className={getThreatLevelColor(pestInfo.threatLevel)}
+            className={getThreatLevelColor(result.threatLevel)}
           >
-            {pestInfo.threatLevel.charAt(0).toUpperCase() +
-              pestInfo.threatLevel.slice(1)}{" "}
+            {result.threatLevel.charAt(0).toUpperCase() +
+              result.threatLevel.slice(1)}{" "}
             Threat
           </Badge>
         </CardHeader>
@@ -75,12 +80,12 @@ const PestIdentificationResults: React.FC<PestIdentificationResultsProps> = ({
           <div className="space-y-6">
             {/* Pest Name and Confidence Score */}
             <div className="space-y-2">
-              <h3 className="text-xl font-semibold">{pestInfo.name}</h3>
+              <h3 className="text-xl font-semibold">{result.name}</h3>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-500">AI Confidence:</span>
-                <Progress value={pestInfo.confidence} className="w-32" />
+                <Progress value={result.confidence} className="w-32" />
                 <span className="text-sm font-medium">
-                  {pestInfo.confidence}%
+                  {result.confidence}%
                 </span>
               </div>
             </div>
@@ -88,7 +93,7 @@ const PestIdentificationResults: React.FC<PestIdentificationResultsProps> = ({
             {/* Description */}
             <div className="flex items-start gap-2 bg-blue-50 p-4 rounded-lg">
               <Info className="h-5 w-5 text-blue-500 mt-0.5" />
-              <p className="text-sm text-blue-900">{pestInfo.description}</p>
+              <p className="text-sm text-blue-900">{result.description}</p>
             </div>
 
             {/* Detailed Information Accordion */}
@@ -103,7 +108,7 @@ const PestIdentificationResults: React.FC<PestIdentificationResultsProps> = ({
                 </AccordionTrigger>
                 <AccordionContent>
                   <ul className="list-disc list-inside space-y-2 pl-4">
-                    {pestInfo.controlMethods.map((method, index) => (
+                    {result.controlMethods.map((method, index) => (
                       <li key={index} className="text-sm text-gray-600">
                         {method}
                       </li>
@@ -122,7 +127,7 @@ const PestIdentificationResults: React.FC<PestIdentificationResultsProps> = ({
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="flex flex-wrap gap-2 pl-4">
-                    {pestInfo.affectedPlants.map((plant, index) => (
+                    {result.affectedPlants.map((plant, index) => (
                       <Badge key={index} variant="outline">
                         {plant}
                       </Badge>
@@ -138,4 +143,4 @@ const PestIdentificationResults: React.FC<PestIdentificationResultsProps> = ({
   );
 };
 
-export default PestIdentificationResults;
+export default IdentificationResults;
