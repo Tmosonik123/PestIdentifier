@@ -1,4 +1,5 @@
 import React from "react";
+import { addTrackingEntry } from "../lib/tracking";
 import { useForm } from "react-hook-form";
 import { Card } from "./ui/card";
 import { Input } from "./ui/input";
@@ -18,6 +19,7 @@ interface TrackingLogFormProps {
 
 interface TrackingLogData {
   date: Date;
+  pestName: string;
   location: string;
   affectedPlants: string;
   treatmentPlan: string;
@@ -28,6 +30,7 @@ const TrackingLogForm = ({
   onSubmit,
   initialData = {
     date: new Date(),
+    pestName: "",
     location: "",
     affectedPlants: "",
     treatmentPlan: "",
@@ -46,18 +49,15 @@ const TrackingLogForm = ({
 
   const date = watch("date");
 
-  const handleFormSubmit = async (data: TrackingLogData) => {
-    try {
-      await addTrackingEntry(data);
-      onSubmit?.(data);
-      // Reset form
-      setValue("location", "");
-      setValue("affectedPlants", "");
-      setValue("treatmentPlan", "");
-      setValue("notes", "");
-    } catch (error) {
-      console.error("Error submitting form:", error);
-    }
+  const handleFormSubmit = (data: TrackingLogData) => {
+    onSubmit?.(data);
+    // Reset form
+    setValue("date", new Date());
+    setValue("pestName", "");
+    setValue("location", "");
+    setValue("affectedPlants", "");
+    setValue("treatmentPlan", "");
+    setValue("notes", "");
   };
 
   return (
@@ -87,6 +87,15 @@ const TrackingLogForm = ({
               />
             </PopoverContent>
           </Popover>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="pestName">Pest/Disease Name</Label>
+          <Input
+            id="pestName"
+            placeholder="e.g., Japanese Beetle, Powdery Mildew"
+            {...register("pestName")}
+          />
         </div>
 
         <div className="space-y-2">

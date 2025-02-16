@@ -17,7 +17,7 @@ const Home = () => {
   const [identificationResult, setIdentificationResult] =
     useState<IdentificationInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [showTrackingForm, setShowTrackingForm] = useState(false);
+  const [activeTab, setActiveTab] = useState("capture");
 
   const handlePhotoCapture = async (photoData: string) => {
     try {
@@ -35,7 +35,9 @@ const Home = () => {
       }
     } catch (error) {
       console.error("Error analyzing image:", error);
-      // You might want to show an error message to the user here
+      setError(
+        "Error analyzing image. Please check your API key configuration.",
+      );
     } finally {
       setIsAnalyzing(false);
     }
@@ -51,7 +53,11 @@ const Home = () => {
             Garden Pest & Disease Identifier
           </h1>
 
-          <Tabs defaultValue="capture" className="w-full">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
             <TabsList className="grid w-full grid-cols-3 mb-8">
               <TabsTrigger value="capture">Identify Pest/Disease</TabsTrigger>
               <TabsTrigger value="track">Track Pest & Diseases</TabsTrigger>
@@ -125,12 +131,40 @@ const Home = () => {
 
             <TabsContent value="track">
               <TrackingLogForm
+                initialData={
+                  identificationResult
+                    ? {
+                        date: new Date(),
+                        pestName: identificationResult.name,
+                        location: "",
+                        affectedPlants:
+                          identificationResult.affectedPlants?.join(", ") || "",
+                        treatmentPlan:
+                          identificationResult.controlMethods?.join("\n") || "",
+                        notes: "",
+                      }
+                    : undefined
+                }
                 onSubmit={async (data) => {
-                  if (identificationResult) {
-                    await addTrackingEntry({
+                  try {
+                    const entryData = {
                       ...data,
-                      pestName: identificationResult.name,
-                    });
+                      // If we have identification results, include them
+                      ...(identificationResult && {
+                        confidence: identificationResult.confidence,
+                        threatLevel: identificationResult.threatLevel,
+                        description: identificationResult.description,
+                        symptoms: identificationResult.symptoms,
+                        controlMethods: identificationResult.controlMethods,
+                        type: identificationResult.type,
+                      }),
+                    };
+                    await addTrackingEntry(entryData);
+                    alert("Entry saved successfully!");
+                    setActiveTab("history");
+                  } catch (error) {
+                    console.error("Error saving entry:", error);
+                    alert("Error saving entry. Please try again.");
                   }
                 }}
               />

@@ -1,7 +1,11 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Initialize the Gemini API with your API key
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || "");
+const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+
+if (!import.meta.env.VITE_GEMINI_API_KEY) {
+  console.error("Missing VITE_GEMINI_API_KEY environment variable");
+}
 
 interface IdentificationResult {
   type: "pest" | "disease";

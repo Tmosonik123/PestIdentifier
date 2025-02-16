@@ -5,6 +5,7 @@ import {
   orderBy,
   getDocs,
   where,
+  Timestamp,
 } from "firebase/firestore";
 import { db } from "./firebase";
 
@@ -22,7 +23,8 @@ export const addTrackingEntry = async (entry: Omit<TrackingEntry, "id">) => {
   try {
     const docRef = await addDoc(collection(db, "tracking"), {
       ...entry,
-      date: entry.date.toISOString(),
+      date: Timestamp.fromDate(entry.date),
+      createdAt: Timestamp.fromDate(new Date()),
     });
     return docRef.id;
   } catch (error) {
@@ -31,15 +33,19 @@ export const addTrackingEntry = async (entry: Omit<TrackingEntry, "id">) => {
   }
 };
 
-export const getTrackingEntries = async () => {
+export const getTrackingEntries = async (): Promise<TrackingEntry[]> => {
   try {
-    const q = query(collection(db, "tracking"), orderBy("date", "desc"));
+    const trackingCollection = collection(db, "tracking");
+    const q = query(trackingCollection, orderBy("createdAt", "desc"));
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      date: new Date(doc.data().date),
-    })) as TrackingEntry[];
+    return querySnapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        date: data.date.toDate(),
+      };
+    }) as TrackingEntry[];
   } catch (error) {
     console.error("Error getting tracking entries:", error);
     throw error;

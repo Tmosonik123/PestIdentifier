@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { getTrackingEntries, type TrackingEntry } from "../lib/tracking";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -14,14 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { format } from "date-fns";
 import { CalendarIcon, Search, SortAsc, SortDesc } from "lucide-react";
 
-interface TrackingEntry {
-  id: string;
-  date: Date;
-  pestName: string;
-  location: string;
-  affectedPlants: string;
-  treatmentPlan: string;
-}
+// Using TrackingEntry type from tracking.ts
 
 interface TrackingHistoryProps {
   entries?: TrackingEntry[];
@@ -54,7 +48,12 @@ const TrackingHistory = () => {
     const fetchEntries = async () => {
       try {
         const data = await getTrackingEntries();
-        setEntries(data);
+        // Convert Firestore Timestamp to Date
+        const formattedData = data.map((entry) => ({
+          ...entry,
+          date: entry.date instanceof Date ? entry.date : new Date(entry.date),
+        }));
+        setEntries(formattedData);
       } catch (error) {
         console.error("Error fetching entries:", error);
       } finally {
