@@ -46,8 +46,18 @@ const TrackingLogForm = ({
 
   const date = watch("date");
 
-  const handleFormSubmit = (data: TrackingLogData) => {
-    onSubmit?.(data);
+  const handleFormSubmit = async (data: TrackingLogData) => {
+    try {
+      await addTrackingEntry(data);
+      onSubmit?.(data);
+      // Reset form
+      setValue("location", "");
+      setValue("affectedPlants", "");
+      setValue("treatmentPlan", "");
+      setValue("notes", "");
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
 
   return (

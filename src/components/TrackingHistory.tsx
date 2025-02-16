@@ -46,9 +46,24 @@ const defaultEntries: TrackingEntry[] = [
   },
 ];
 
-const TrackingHistory = ({
-  entries = defaultEntries,
-}: TrackingHistoryProps) => {
+const TrackingHistory = () => {
+  const [entries, setEntries] = useState<TrackingEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchEntries = async () => {
+      try {
+        const data = await getTrackingEntries();
+        setEntries(data);
+      } catch (error) {
+        console.error("Error fetching entries:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEntries();
+  }, []);
   const [date, setDate] = React.useState<Date>();
   const [searchTerm, setSearchTerm] = React.useState("");
   const [sortOrder, setSortOrder] = React.useState<"asc" | "desc">("desc");

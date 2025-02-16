@@ -5,6 +5,7 @@ import { Loader2 } from "lucide-react";
 import CameraInterface from "./CameraInterface";
 import PestIdentificationResults from "./PestIdentificationResults";
 import TrackingLogForm from "./TrackingLogForm";
+import { addTrackingEntry } from "../lib/tracking";
 import TrackingHistory from "./TrackingHistory";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Card } from "./ui/card";
@@ -123,7 +124,16 @@ const Home = () => {
             </TabsContent>
 
             <TabsContent value="track">
-              <TrackingLogForm />
+              <TrackingLogForm
+                onSubmit={async (data) => {
+                  if (identificationResult) {
+                    await addTrackingEntry({
+                      ...data,
+                      pestName: identificationResult.name,
+                    });
+                  }
+                }}
+              />
             </TabsContent>
 
             <TabsContent value="history">
