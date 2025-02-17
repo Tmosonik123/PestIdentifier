@@ -33,7 +33,19 @@ export async function getAgriResponse(
     });
 
     const result = await model.generateContent(
-      `You are an agricultural expert. Provide a brief, practical response to this farming/gardening question. Focus on actionable advice and include specific product recommendations available in ${location?.country || "the user's"} region (${location?.region || "unknown region"}). For any chemical or product recommendations, include 2-3 specific brand names commonly available in this location. Keep the response under 150 words.
+      `You are an agricultural expert. Provide a practical response to this farming/gardening question with the following structure:
+
+1. Brief Problem Analysis (1-2 sentences)
+2. Recommended Products (2-3 specific brands available in ${location?.country || "the user's"} region)
+   For each product include:
+   - Brand name and active ingredient
+   - Application rate/dosage
+   - Application method/procedure
+   - Safe days before harvest
+   - Safety precautions
+3. Additional non-chemical control methods (if applicable)
+
+Keep the total response under 200 words and focus on products legally approved in ${location?.country || "the user's"} region.
 
 Question: ${prompt}`,
     );
@@ -76,10 +88,56 @@ If a pest or disease IS visible, respond with a valid JSON object in this format
 "confidence": 85,
 "description": "Brief description",
 "threatLevel": "low",
-"controlMethods": ["method 1 (e.g., Brand X, Brand Y)", "method 2 (e.g., Brand A, Brand B)"],
+"controlMethods": [
+  {
+    "method": "Chemical Control",
+    "products": [
+      {
+        "brandName": "Specific commercial product name",
+        "activeIngredient": "Chemical name and concentration",
+        "applicationRate": "Exact measurement (e.g., 2.5ml/L water)",
+        "applicationMethod": "Detailed application instructions",
+        "safeDays": "Specific number of days before harvest",
+        "safetyPrecautions": "List of required PPE and safety measures"
+      },
+      {
+        "brandName": "Alternative commercial product",
+        "activeIngredient": "Different chemical class for resistance management",
+        "applicationRate": "Exact measurement",
+        "applicationMethod": "Detailed instructions",
+        "safeDays": "Days before harvest",
+        "safetyPrecautions": "Safety requirements"
+      }
+    ]
+  },
+  {
+    "method": "Organic Control",
+    "products": [
+      {
+        "brandName": "Organic product name",
+        "activeIngredient": "Natural active ingredient",
+        "applicationRate": "Specific measurements",
+        "applicationMethod": "Application instructions",
+        "safeDays": "Days before harvest",
+        "safetyPrecautions": "Safety measures"
+      }
+    ]
+  },
+  {
+    "method": "Cultural Control",
+    "description": "Prevention and management practices"
+  }
+],
 "affectedPlants": ["plant 1", "plant 2"],
 "symptoms": ["symptom 1", "symptom 2"]
 }
+
+IMPORTANT GUIDELINES:
+1. For Chemical Control, ALWAYS include at least 2 different chemical class products for resistance management
+2. Include SPECIFIC brand names of products that are legally registered and available
+3. Provide EXACT application rates and measurements
+4. List SPECIFIC safety equipment required (e.g., "nitrile gloves, N95 mask, goggles")
+5. Include actual number of days for safe harvest intervals
 
 Respond ONLY with the JSON - no additional text or markdown.`;
 

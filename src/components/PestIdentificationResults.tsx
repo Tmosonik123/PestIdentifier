@@ -10,13 +10,28 @@ import {
 } from "./ui/accordion";
 import { Bug, Info, AlertTriangle, Sprout } from "lucide-react";
 
-export interface IdentificationInfo {
+export interface ControlProduct {
+  brandName: string;
+  activeIngredient: string;
+  applicationRate: string;
+  applicationMethod: string;
+  safeDays: string;
+  safetyPrecautions: string;
+}
+
+interface ControlMethod {
+  method: string;
+  products?: ControlProduct[];
+  description?: string;
+}
+
+interface IdentificationInfo {
   type: "pest" | "disease";
   name: string;
   confidence: number;
   description: string;
   threatLevel: "low" | "medium" | "high";
-  controlMethods: string[];
+  controlMethods: ControlMethod[];
   affectedPlants: string[];
   symptoms?: string[];
 }
@@ -107,13 +122,61 @@ const IdentificationResults: React.FC<IdentificationResultsProps> = ({
                   </div>
                 </AccordionTrigger>
                 <AccordionContent>
-                  <ul className="list-disc list-inside space-y-2 pl-4">
+                  <div className="space-y-4 pl-4">
                     {result.controlMethods.map((method, index) => (
-                      <li key={index} className="text-sm text-gray-600">
-                        {method}
-                      </li>
+                      <div key={index} className="space-y-2">
+                        <h4 className="font-medium text-base">
+                          {method.method}
+                        </h4>
+                        {method.products ? (
+                          <div className="space-y-3">
+                            {method.products.map((product, pIndex) => (
+                              <div
+                                key={pIndex}
+                                className="bg-gray-50 p-3 rounded-md"
+                              >
+                                <h5 className="font-medium text-sm">
+                                  {product.brandName}
+                                </h5>
+                                <ul className="text-sm space-y-1 mt-1 text-gray-600">
+                                  <li>
+                                    <span className="font-medium">
+                                      Active Ingredient:
+                                    </span>{" "}
+                                    {product.activeIngredient}
+                                  </li>
+                                  <li>
+                                    <span className="font-medium">
+                                      Application Rate:
+                                    </span>{" "}
+                                    {product.applicationRate}
+                                  </li>
+                                  <li>
+                                    <span className="font-medium">Method:</span>{" "}
+                                    {product.applicationMethod}
+                                  </li>
+                                  <li>
+                                    <span className="font-medium">
+                                      Safe Days:
+                                    </span>{" "}
+                                    {product.safeDays}
+                                  </li>
+                                  <li>
+                                    <span className="font-medium">Safety:</span>{" "}
+                                    {product.safetyPrecautions}
+                                  </li>
+                                </ul>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-sm text-gray-600">
+                            {method.description}
+                          </p>
+                        )}
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </AccordionContent>
               </AccordionItem>
 
