@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { getUserLocation, type LocationInfo } from "../lib/location";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Card } from "./ui/card";
+import { Card, CardHeader } from "./ui/card";
+import LocationSelector from "./LocationSelector";
 import { ScrollArea } from "./ui/scroll-area";
 import { Send } from "lucide-react";
 import { getAgriResponse } from "../lib/gemini";
@@ -50,6 +51,9 @@ const AgriChat = () => {
 
   return (
     <Card className="w-full max-w-2xl mx-auto p-4 bg-white shadow-lg">
+      <CardHeader className="px-0 pt-0">
+        <LocationSelector location={location} onLocationChange={setLocation} />
+      </CardHeader>
       <ScrollArea className="h-[400px] pr-4 mb-4">
         <div className="space-y-4">
           {messages.map((message, index) => (

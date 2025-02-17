@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import type { IdentificationInfo } from "./PestIdentificationResults";
 import { identifyFromImage } from "../lib/gemini";
 import { Loader2 } from "lucide-react";
@@ -9,7 +9,9 @@ import { addTrackingEntry } from "../lib/tracking";
 import TrackingHistory from "./TrackingHistory";
 import AgriChat from "./AgriChat";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { Card } from "./ui/card";
+import { Card, CardHeader } from "./ui/card";
+import LocationSelector from "./LocationSelector";
+import { getUserLocation, type LocationInfo } from "../lib/location";
 
 const Home = () => {
   const [currentPhoto, setCurrentPhoto] = useState<string | null>(null);
@@ -19,6 +21,11 @@ const Home = () => {
     useState<IdentificationInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("capture");
+  const [location, setLocation] = useState<LocationInfo>();
+
+  useEffect(() => {
+    getUserLocation().then(setLocation);
+  }, []);
 
   const handlePhotoCapture = async (photoData: string) => {
     try {
@@ -26,7 +33,7 @@ const Home = () => {
       setShowResults(true);
       setIsAnalyzing(true);
 
-      const result = await identifyFromImage(photoData);
+      const result = await identifyFromImage(photoData, location);
       if ("error" in result && result.error === "no_disease_found") {
         setError("No pest or disease identified in the image");
         setIdentificationResult(null);
@@ -50,9 +57,15 @@ const Home = () => {
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
       <Card className="max-w-7xl mx-auto bg-white shadow-lg">
         <div className="p-6">
-          <h1 className="text-3xl font-bold text-center mb-8">
-            Garden Pest & Disease Identifier
-          </h1>
+          <div className="space-y-6">
+            <LocationSelector
+              location={location}
+              onLocationChange={setLocation}
+            />
+            <h1 className="text-3xl font-bold text-center">
+              Garden Pest & Disease Identifier
+            </h1>
+          </div>
 
           <Tabs
             value={activeTab}

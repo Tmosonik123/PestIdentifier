@@ -60,6 +60,7 @@ Question: ${prompt}`,
 
 export async function identifyFromImage(
   imageBase64: string,
+  location?: LocationInfo,
 ): Promise<IdentificationResult> {
   try {
     // Remove the data URL prefix to get just the base64 data
@@ -76,7 +77,7 @@ export async function identifyFromImage(
     });
 
     // Create the prompt
-    const prompt = `You are an expert entomologist and plant pathologist. First, analyze this garden image and determine if there are any visible pests or plant diseases present.
+    const prompt = `You are an expert entomologist and plant pathologist. You are providing advice for a user in ${location?.country || "unknown location"}. First, analyze this garden image and determine if there are any visible pests or plant diseases present.
 
 If NO pests or diseases are visible, respond with exactly:
 {"error": "no_disease_found"}
