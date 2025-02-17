@@ -41,7 +41,7 @@ const defaultEntries: TrackingEntry[] = [
 ];
 
 const TrackingHistory = () => {
-  const [entries, setEntries] = useState<TrackingEntry[]>([]);
+  const [entries, setEntries] = useState<TrackingEntry[]>(defaultEntries);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -143,7 +143,20 @@ const TrackingHistory = () => {
               <div className="md:text-right">
                 <h4 className="font-medium">Treatment Plan:</h4>
                 <p className="text-sm">{entry.treatmentPlan}</p>
-                <Button variant="outline" className="mt-2">
+                <Button
+                  variant="outline"
+                  className="mt-2"
+                  onClick={() => {
+                    const details =
+                      `Pest/Disease: ${entry.pestName}\n` +
+                      `Date: ${format(entry.date, "PPP")}\n` +
+                      `Location: ${entry.location}\n` +
+                      `Affected Plants: ${entry.affectedPlants}\n` +
+                      `Treatment Plan: ${entry.treatmentPlan}\n` +
+                      (entry.notes ? `Notes: ${entry.notes}` : "");
+                    alert(details);
+                  }}
+                >
                   View Details
                 </Button>
               </div>

@@ -1,20 +1,27 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import { getFirestore, enableIndexedDbPersistence } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCLP-T39DyupqikQ6a7MOI77nUTMNf5h3Y",
-  authDomain: "pestidentifier.firebaseapp.com",
-  projectId: "pestidentifier",
-  storageBucket: "pestidentifier.firebasestorage.app",
-  messagingSenderId: "227027690816",
-  appId: "1:227027690816:web:304b6491b497a62c5e86a5",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-if (import.meta.env.DEV) {
-  connectFirestoreEmulator(db, "localhost", 8080);
-}
+// Enable offline persistence
+enableIndexedDbPersistence(db).catch((err) => {
+  if (err.code == "failed-precondition") {
+    console.warn(
+      "Multiple tabs open, persistence can only be enabled in one tab at a time.",
+    );
+  } else if (err.code == "unimplemented") {
+    console.warn("The current browser doesn't support offline persistence.");
+  }
+});
 
 export { db };

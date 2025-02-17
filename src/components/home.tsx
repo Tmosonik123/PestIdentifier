@@ -7,6 +7,7 @@ import PestIdentificationResults from "./PestIdentificationResults";
 import TrackingLogForm from "./TrackingLogForm";
 import { addTrackingEntry } from "../lib/tracking";
 import TrackingHistory from "./TrackingHistory";
+import AgriChat from "./AgriChat";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Card } from "./ui/card";
 
@@ -58,10 +59,11 @@ const Home = () => {
             onValueChange={setActiveTab}
             className="w-full"
           >
-            <TabsList className="grid w-full grid-cols-3 mb-8">
+            <TabsList className="grid w-full grid-cols-4 mb-8">
               <TabsTrigger value="capture">Identify Pest/Disease</TabsTrigger>
               <TabsTrigger value="track">Track Pest & Diseases</TabsTrigger>
               <TabsTrigger value="history">History</TabsTrigger>
+              <TabsTrigger value="chat">Ask Expert</TabsTrigger>
             </TabsList>
 
             <TabsContent value="capture" className="space-y-8">
@@ -168,6 +170,10 @@ const Home = () => {
                   }
                 }}
               />
+            </TabsContent>
+
+            <TabsContent value="chat">
+              <AgriChat />
             </TabsContent>
 
             <TabsContent value="history">

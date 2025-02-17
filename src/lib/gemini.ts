@@ -18,6 +18,34 @@ interface IdentificationResult {
   symptoms?: string[];
 }
 
+export async function getAgriResponse(
+  prompt: string,
+  location?: LocationInfo,
+): Promise<string> {
+  try {
+    const model = genAI.getGenerativeModel({
+      model: "gemini-pro",
+      generationConfig: {
+        temperature: 0.3,
+        topP: 0.8,
+        maxOutputTokens: 500,
+      },
+    });
+
+    const result = await model.generateContent(
+      `You are an agricultural expert. Provide a brief, practical response to this farming/gardening question. Focus on actionable advice and include specific product recommendations available in ${location?.country || "the user's"} region (${location?.region || "unknown region"}). For any chemical or product recommendations, include 2-3 specific brand names commonly available in this location. Keep the response under 150 words.
+
+Question: ${prompt}`,
+    );
+
+    const response = await result.response;
+    return response.text();
+  } catch (error) {
+    console.error("Error getting AI response:", error);
+    throw error;
+  }
+}
+
 export async function identifyFromImage(
   imageBase64: string,
 ): Promise<IdentificationResult> {
@@ -48,7 +76,7 @@ If a pest or disease IS visible, respond with a valid JSON object in this format
 "confidence": 85,
 "description": "Brief description",
 "threatLevel": "low",
-"controlMethods": ["method 1", "method 2"],
+"controlMethods": ["method 1 (e.g., Brand X, Brand Y)", "method 2 (e.g., Brand A, Brand B)"],
 "affectedPlants": ["plant 1", "plant 2"],
 "symptoms": ["symptom 1", "symptom 2"]
 }
