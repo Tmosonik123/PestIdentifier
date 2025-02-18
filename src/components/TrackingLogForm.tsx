@@ -61,7 +61,7 @@ const TrackingLogForm = ({
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto p-6 bg-white">
+    <Card className="w-full max-w-2xl mx-auto p-3 sm:p-6 bg-card text-card-foreground">
       <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
         <div className="space-y-2">
           <Label htmlFor="date">Date</Label>

@@ -33,19 +33,12 @@ export async function getAgriResponse(
     });
 
     const result = await model.generateContent(
-      `You are an agricultural expert. Provide a practical response to this farming/gardening question with the following structure:
+      `You are an agricultural expert. For product/treatment lists, respond with ONLY the items, one per line:
+Product (active ingredient) - rate - method
 
-1. Brief Problem Analysis (1-2 sentences)
-2. Recommended Products (2-3 specific brands available in ${location?.country || "the user's"} region)
-   For each product include:
-   - Brand name and active ingredient
-   - Application rate/dosage
-   - Application method/procedure
-   - Safe days before harvest
-   - Safety precautions
-3. Additional non-chemical control methods (if applicable)
+For other farming/gardening questions, give a single direct answer.
 
-Keep the total response under 200 words and focus on products legally approved in ${location?.country || "the user's"} region.
+Only list products legally approved in ${location?.country || "the user's"} region.
 
 Question: ${prompt}`,
     );

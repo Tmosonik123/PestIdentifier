@@ -68,10 +68,10 @@ const TrackingHistory = () => {
   const [sortOrder, setSortOrder] = React.useState<"asc" | "desc">("desc");
 
   return (
-    <div className="p-6 bg-white min-h-screen">
+    <div className="p-6 bg-background text-foreground min-h-screen">
       <h1 className="text-2xl font-bold mb-6">Tracking History</h1>
 
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
+      <div className="flex flex-col lg:flex-row gap-4 mb-6">
         <div className="flex-1">
           <Input
             placeholder="Search by pest name or location"
@@ -131,7 +131,7 @@ const TrackingHistory = () => {
       <div className="grid gap-4">
         {entries.map((entry) => (
           <Card key={entry.id} className="p-4">
-            <div className="flex flex-col md:flex-row justify-between gap-4">
+            <div className="flex flex-col sm:flex-row justify-between gap-4">
               <div>
                 <h3 className="font-semibold text-lg">{entry.pestName}</h3>
                 <p className="text-sm text-gray-500">

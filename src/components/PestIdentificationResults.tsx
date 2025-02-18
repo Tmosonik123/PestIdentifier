@@ -75,10 +75,10 @@ const IdentificationResults: React.FC<IdentificationResultsProps> = ({
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4 bg-white">
+    <div className="w-full max-w-4xl mx-auto p-2 sm:p-4 bg-card text-card-foreground">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-2xl font-bold flex items-center gap-2">
+          <CardTitle className="text-xl sm:text-2xl font-bold flex items-center gap-2">
             <Bug className="h-6 w-6" />
             {result.type === "pest" ? "Pest" : "Disease"} Identification Results
           </CardTitle>
@@ -133,12 +133,12 @@ const IdentificationResults: React.FC<IdentificationResultsProps> = ({
                             {method.products.map((product, pIndex) => (
                               <div
                                 key={pIndex}
-                                className="bg-gray-50 p-3 rounded-md"
+                                className="bg-muted p-3 rounded-md text-foreground"
                               >
                                 <h5 className="font-medium text-sm">
                                   {product.brandName}
                                 </h5>
-                                <ul className="text-sm space-y-1 mt-1 text-gray-600">
+                                <ul className="text-sm space-y-1 mt-1 text-muted-foreground">
                                   <li>
                                     <span className="font-medium">
                                       Active Ingredient:

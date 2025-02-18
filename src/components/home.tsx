@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import type { IdentificationInfo } from "./PestIdentificationResults";
 import { identifyFromImage } from "../lib/gemini";
-import { Loader2 } from "lucide-react";
+import { Loader2, Moon, Sun } from "lucide-react";
 import CameraInterface from "./CameraInterface";
 import PestIdentificationResults from "./PestIdentificationResults";
 import TrackingLogForm from "./TrackingLogForm";
@@ -9,9 +9,11 @@ import { addTrackingEntry } from "../lib/tracking";
 import TrackingHistory from "./TrackingHistory";
 import AgriChat from "./AgriChat";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { Card, CardHeader } from "./ui/card";
+import { Card } from "./ui/card";
+import { Button } from "./ui/button";
 import LocationSelector from "./LocationSelector";
 import { getUserLocation, type LocationInfo } from "../lib/location";
+import MobileNav from "./MobileNav";
 
 const Home = () => {
   const [currentPhoto, setCurrentPhoto] = useState<string | null>(null);
@@ -54,17 +56,33 @@ const Home = () => {
   const handlePhotoUpload = handlePhotoCapture;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-      <Card className="max-w-7xl mx-auto bg-white shadow-lg">
+    <div className="min-h-screen bg-background text-foreground p-2 sm:p-4 md:p-8">
+      <Card className="max-w-7xl mx-auto bg-card text-card-foreground shadow-lg">
         <div className="p-6">
-          <div className="space-y-6">
-            <LocationSelector
-              location={location}
-              onLocationChange={setLocation}
-            />
-            <h1 className="text-3xl font-bold text-center">
-              Garden Pest & Disease Identifier
-            </h1>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <MobileNav activeTab={activeTab} onTabChange={setActiveTab} />
+              <h1 className="text-2xl sm:text-3xl font-bold">
+                Garden Pest & Disease Identifier
+              </h1>
+            </div>
+            <div className="flex items-center gap-4">
+              <LocationSelector
+                location={location}
+                onLocationChange={setLocation}
+              />
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() =>
+                  document.documentElement.classList.toggle("dark")
+                }
+              >
+                <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <span className="sr-only">Toggle theme</span>
+              </Button>
+            </div>
           </div>
 
           <Tabs
@@ -72,7 +90,7 @@ const Home = () => {
             onValueChange={setActiveTab}
             className="w-full"
           >
-            <TabsList className="grid w-full grid-cols-4 mb-8">
+            <TabsList className="hidden sm:grid w-full grid-cols-4 gap-2 mb-8">
               <TabsTrigger value="capture">Identify Pest/Disease</TabsTrigger>
               <TabsTrigger value="track">Track Pest & Diseases</TabsTrigger>
               <TabsTrigger value="history">History</TabsTrigger>
@@ -186,7 +204,7 @@ const Home = () => {
             </TabsContent>
 
             <TabsContent value="chat">
-              <AgriChat />
+              <AgriChat location={location} />
             </TabsContent>
 
             <TabsContent value="history">

@@ -82,7 +82,7 @@ const CameraInterface = ({
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto p-6 bg-white shadow-lg">
+    <Card className="w-full max-w-2xl mx-auto p-3 sm:p-6 bg-card text-card-foreground shadow-lg">
       <div className="space-y-6">
         {!isCapturing && !photoPreview && (
           <div className="flex flex-col gap-4 items-center justify-center p-8 border-2 border-dashed border-gray-300 rounded-lg">

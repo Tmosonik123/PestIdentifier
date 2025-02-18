@@ -21,7 +21,7 @@ const LocationSelector = ({
   onLocationChange,
 }: LocationSelectorProps) => {
   return (
-    <div className="flex items-center gap-4 p-2 rounded-lg bg-muted/50">
+    <div className="flex items-center gap-2 p-2 rounded-lg bg-muted/50 w-[200px]">
       <MapPin className="h-4 w-4 text-muted-foreground" />
       <div className="flex-1 grid gap-2">
         <Label htmlFor="country">Location</Label>
@@ -39,16 +39,16 @@ const LocationSelector = ({
             <SelectValue placeholder="Select your country" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="United States">United States</SelectItem>
-            <SelectItem value="United Kingdom">United Kingdom</SelectItem>
-            <SelectItem value="Canada">Canada</SelectItem>
-            <SelectItem value="Australia">Australia</SelectItem>
-            <SelectItem value="New Zealand">New Zealand</SelectItem>
-            <SelectItem value="India">India</SelectItem>
-            <SelectItem value="Philippines">Philippines</SelectItem>
-            <SelectItem value="Malaysia">Malaysia</SelectItem>
-            <SelectItem value="Singapore">Singapore</SelectItem>
-            <SelectItem value="Indonesia">Indonesia</SelectItem>
+            <SelectItem value="South Africa">South Africa</SelectItem>
+            <SelectItem value="Kenya">Kenya</SelectItem>
+            <SelectItem value="Nigeria">Nigeria</SelectItem>
+            <SelectItem value="Tanzania">Tanzania</SelectItem>
+            <SelectItem value="Uganda">Uganda</SelectItem>
+            <SelectItem value="Ghana">Ghana</SelectItem>
+            <SelectItem value="Ethiopia">Ethiopia</SelectItem>
+            <SelectItem value="Zimbabwe">Zimbabwe</SelectItem>
+            <SelectItem value="Zambia">Zambia</SelectItem>
+            <SelectItem value="Morocco">Morocco</SelectItem>
           </SelectContent>
         </Select>
       </div>
